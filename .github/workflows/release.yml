@@ -7,6 +7,10 @@ on:
   push:
     tags: ["v*"]
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to publish the binaries under (e.g. v2.0.1)"
+        required: true
 
 permissions:
   contents: write
@@ -34,7 +38,7 @@ jobs:
             asset: Lifeline-Windows.exe
           - os: ubuntu-22.04          # older glibc, so the binary runs on more distributions
             asset: Lifeline-Linux-x86_64
-          - os: macos-14              # Apple silicon
+          - os: macos-latest          # Apple silicon
             asset: Lifeline-macOS-arm64.zip
     runs-on: ${{ matrix.os }}
     steps:
@@ -84,6 +88,8 @@ jobs:
 
   release:
     needs: build
+    # Publish whatever built, so one unavailable platform doesn't block the others.
+    if: ${{ !cancelled() && needs.build.result != 'skipped' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
@@ -96,8 +102,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="${GITHUB_REF_NAME}"
-          if [ "${GITHUB_REF_TYPE}" != "tag" ]; then echo "Run from a tag to publish"; exit 0; fi
+          TAG="${{ inputs.tag || github.ref_name }}"
+          case "$TAG" in v*) ;; *) echo "No version tag to publish under"; exit 0;; esac
           NOTES="Download the file for your system below, or see https://ojas1024.github.io/LifeLine/download.html for step-by-step instructions. Also on PyPI: pip install lifeline-recovery"
           gh release create "$TAG" assets/* --repo "$GITHUB_REPOSITORY" --title "Lifeline ${TAG#v}" --notes "$NOTES" --latest \
             || gh release upload "$TAG" assets/* --repo "$GITHUB_REPOSITORY" --clobber
