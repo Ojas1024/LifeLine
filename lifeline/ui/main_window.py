@@ -85,6 +85,8 @@ class MainWindow(QMainWindow):
         self.results.newScanRequested.connect(self.go_home)
         self.results.deepScanRequested.connect(self._deep_from_results)
         self.results.saveRequested.connect(self.save_session)
+        self.results.survivorsRequested.connect(self.find_survivors)
+        self.setup.survivorsRequested.connect(self.find_survivors)
         self.recover_page.openFolder.connect(lambda: QDesktopServices.openUrl(QUrl.fromLocalFile(self.last_dest)))
         self.recover_page.backToResults.connect(lambda: self.go(self.RESULTS))
         self.recover_page.startOver.connect(self.go_home)
@@ -298,7 +300,7 @@ class MainWindow(QMainWindow):
         if not s:
             return
         reader = s.reader
-        can_deep = reader is not None and self.last_mode in ("quick", "loaded")
+        can_deep = reader is not None and self.last_mode in ("quick", "loaded", "survivors") and s.can_quick
         self.results.set_items(s.items, s.display_name, can_deep=can_deep,
                                read_fn=lambda it, n: read_head(reader, it, n))
         self.go(self.RESULTS)
@@ -340,6 +342,31 @@ class MainWindow(QMainWindow):
             self.setup.prepare(self.session, self.volume, self.scenario)
             self.setup.select("deep")
             self.go(self.SETUP)
+
+    # ------------------------------------------------------------ surviving copies
+    def find_survivors(self):
+        """Restore points, thumbnail caches and autosaves: copies SSD TRIM never touched."""
+        if self.task and self.task.isRunning():
+            return
+        if self.session is None:
+            self.session = ScanSession(None, "this computer")
+        s = self.session
+        before = len(s.items)
+        self.last_mode = "survivors"
+
+        def done(_found):
+            self.scanning.map.complete()
+            n = len(s.items) - before
+            QTimer.singleShot(300, self._show_results)
+            if n == 0:
+                QTimer.singleShot(600, lambda: QMessageBox.information(
+                    self, "No surviving copies",
+                    "No restore points, thumbnails or autosaves of deleted files turned up on this computer.\n\n"
+                    "Other places worth checking: OneDrive, Google Drive, iCloud or Dropbox (they keep deleted "
+                    "files for 30 days or more), email attachments, phones and cameras, and USB backups."))
+
+        self._run_scan("Looking for surviving copies", lambda p, c, f, b: s.find_surviving_copies(p, c),
+                       track_map=False, show_map=False, total=0, on_done=done)
 
     # ------------------------------------------------------------ verify
     def verify_files(self, items: List[RecoverableItem]):

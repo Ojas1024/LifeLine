@@ -14,10 +14,11 @@ from PyQt6.QtWidgets import (QAbstractItemView, QCheckBox, QComboBox, QFrame, QH
 
 from . import theme
 from .thumbs import READ_LIMIT, THUMB, ThumbLoader
-from .widgets import dot_icon, help_button, label
+from .widgets import Notice, clear_layout, dot_icon, help_button, label
 from ..core.models import CATEGORIES, Condition, RecoverableItem, Source, human_size
 from ..core.query import compile_query
 
+SURVIVOR_SOURCES = {Source.SNAPSHOT, Source.THUMBNAIL, Source.AUTOSAVE}
 COLUMNS = ["Name", "Folder", "Size", "Modified", "Recovery chance", "Found by"]
 SORT_ROLE = Qt.ItemDataRole.UserRole + 1
 ITEM_ROLE = Qt.ItemDataRole.UserRole + 2
@@ -29,6 +30,15 @@ CHANCE_HELP = {
     "Poor": "Some of its space now holds other data, so parts may be damaged.",
     "Unlikely": "Another file now uses all of its space. What you'd get back is that other file's data.",
 }
+
+
+def chance_help(it: RecoverableItem) -> str:
+    if it.condition == Condition.ERASED and it.deleted and it.file_path is None:
+        return ("The drive already erased this file's data (on SSDs this is TRIM), so it reads back as zeros. "
+                "Only its name survives. Try \"Find surviving copies\" for a restore point, preview or autosave.")
+    if it.condition == Condition.PARTLY_ERASED:
+        return "Part of this file was erased by the drive (SSD TRIM) and reads back as zeros. The rest may still open."
+    return CHANCE_HELP.get(it.chance, "")
 
 SEARCH_HELP = """<b>Search tips</b> (combine freely):<br>
 <code>holiday 2023</code> — words in the name or folder<br>
@@ -158,7 +168,7 @@ class FileModel(QAbstractTableModel):
             return int(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
         if role == Qt.ItemDataRole.ToolTipRole:
             if col == 4:
-                return CHANCE_HELP.get(it.chance, "") + (f"\n{it.note}" if it.note else "")
+                return chance_help(it)
             return it.full_path + (f"\n{it.note}" if it.note else "")
         return None
 
@@ -227,7 +237,7 @@ class FileFilter(QSortFilterProxyModel):
         self.pred = lambda it: True
         self.category = None
         self.folder: Optional[str] = None
-        self.chances = None             # None: hide only "Unlikely"; "all": everything; set: those
+        self.chances = None             # None: hide only overwritten files; "all": everything; set: those
         self.size = None
         self.days = None
         self.setSortRole(SORT_ROLE)
@@ -238,7 +248,7 @@ class FileFilter(QSortFilterProxyModel):
     def filterAcceptsRow(self, row, parent):
         it: RecoverableItem = self.sourceModel().items[row]
         if self.chances is None:
-            if it.chance == "Unlikely" and it.deleted:
+            if it.hidden_by_default:
                 return False
         elif self.chances != "all" and it.chance not in self.chances:
             return False
@@ -355,7 +365,10 @@ class PreviewPane(QFrame):
             self.empty.setText(f"Couldn't read this file: {data}")
             return
         warn = ""
-        if it.size and data and not any(data[:65536]):
+        if it.condition == Condition.ERASED and it.deleted and it.file_path is None:
+            warn = ("This file's data was already erased by the drive (SSD TRIM): it reads back as zeros. "
+                    "Use \"Find surviving copies\" to look for a restore point, preview or autosave of it.")
+        elif it.size and data and not any(data[:65536]):
             warn = ("The start of this file reads back as zeros. On SSDs the drive erases deleted data (TRIM), "
                     "so this file is probably gone.")
         elif it.condition == Condition.OVERWRITTEN and it.deleted:
@@ -393,14 +406,14 @@ class PreviewPane(QFrame):
             rows.append(("Deleted", it.deleted_at.strftime("%Y-%m-%d %H:%M")))
         chance = it.chance if it.deleted else "Still exists"
         rows.append(("Chance", f"<span style='color:{theme.chance_color(it.chance)};font-weight:600'>{chance}</span>"
-                               f" — {_esc(CHANCE_HELP.get(it.chance, '') if it.deleted else 'This file is not deleted.')}"))
+                               f" — {_esc(chance_help(it) if it.deleted else 'This file is not deleted.')}"))
         if it.verified:
             rows.append(("Check", {"ok": "Looks intact", "damaged": "Looks damaged",
                                    "unknown": "Can't be checked automatically"}[it.verified]))
         rows.append(("Found by", it.source))
         if it.extents and len(it.extents) > 1:
             rows.append(("Pieces on disk", str(len(it.extents))))
-        if it.note:
+        if it.note and it.condition not in (Condition.ERASED, Condition.PARTLY_ERASED):
             rows.append(("Note", it.note))
         html = "".join(f"<tr><td style='color:{theme.color('muted')};padding:2px 12px 2px 0;vertical-align:top'>{k}</td>"
                        f"<td style='padding:2px 0'>{v if k == 'Chance' else _esc(v)}</td></tr>" for k, v in rows)
@@ -441,6 +454,7 @@ class ResultsPage(QWidget):
     newScanRequested = pyqtSignal()
     deepScanRequested = pyqtSignal()
     saveRequested = pyqtSignal()
+    survivorsRequested = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -465,9 +479,15 @@ class ResultsPage(QWidget):
         save.clicked.connect(self.saveRequested)
         new = QPushButton("New scan")
         new.clicked.connect(self.newScanRequested)
-        for b in (self.deep_btn, save, new):
+        self.surv_btn = QPushButton("Find surviving copies")
+        self.surv_btn.setToolTip("Look for copies the drive didn't erase: restore points and snapshots, "
+                                 "photo thumbnail caches, and Office autosaves.")
+        self.surv_btn.clicked.connect(self.survivorsRequested)
+        for b in (self.deep_btn, self.surv_btn, save, new):
             head.addWidget(b, 0, Qt.AlignmentFlag.AlignTop)
         lay.addLayout(head)
+        self.banner = QVBoxLayout()
+        lay.addLayout(self.banner)
 
         bar = QHBoxLayout()
         bar.setSpacing(8)
@@ -482,7 +502,7 @@ class ResultsPage(QWidget):
         self.chance = QComboBox()
         for t, v in CHANCE_FILTERS:
             self.chance.addItem(t, v)
-        self.chance.setToolTip("Files marked Unlikely are hidden unless you include them.")
+        self.chance.setToolTip("Overwritten files are hidden unless you include them.")
         self.size = QComboBox()
         for t, v in SIZE_BUCKETS:
             self.size.addItem(t, v)
@@ -655,7 +675,19 @@ class ResultsPage(QWidget):
         self.model.set_items(items, read_fn)
         self.preview.read_fn = read_fn
         ok = sum(1 for i in items if i.chance in ("Excellent", "Good"))
-        hidden = sum(1 for i in items if i.chance == "Unlikely" and i.deleted)
+        hidden = sum(1 for i in items if i.hidden_by_default)
+        erased = sum(1 for i in items if i.deleted and i.file_path is None
+                     and i.condition in (Condition.ERASED, Condition.PARTLY_ERASED))
+        clear_layout(self.banner)
+        if erased:
+            btn = QPushButton("Find surviving copies")
+            btn.setObjectName("primary")
+            btn.clicked.connect(self.survivorsRequested)
+            self.banner.addWidget(Notice(
+                f"The drive already erased {erased:,} of these files",
+                "Their names are still listed, but their data reads back as zeros. On SSDs that's TRIM, and no "
+                "software can undo it. Copies often survive elsewhere though: restore points and snapshots, the "
+                "photo thumbnail cache, and Office autosaves.", kind="warn", action=btn))
         self.title.setText(f"{len(items):,} files found on {source_name}" if items else f"No files found on {source_name}")
         if items:
             lead = f"{ok:,} have an excellent or good chance. Tick the files you want, then recover them to a different drive."
@@ -676,7 +708,7 @@ class ResultsPage(QWidget):
             self.table.setFocus()
 
     def _visible_items(self) -> List[RecoverableItem]:
-        return [i for i in self.model.items if not (i.chance == "Unlikely" and i.deleted)]
+        return [i for i in self.model.items if not i.hidden_by_default]
 
     def _build_tree(self, items: List[RecoverableItem]):
         self.tree.blockSignals(True)
@@ -726,6 +758,12 @@ class ResultsPage(QWidget):
                 li.setToolTip(human_size(sizes[cat]))
                 li.setData(Qt.ItemDataRole.UserRole, cat)
                 self.types.addItem(li)
+        surv = sum(1 for i in vis if i.source in SURVIVOR_SOURCES)
+        if surv and surv != len(vis):
+            li = QListWidgetItem(f"Surviving copies  ·  {surv:,}")
+            li.setToolTip("Restore points, thumbnail previews and autosaves")
+            li.setData(Qt.ItemDataRole.UserRole, "__surv__")
+            self.types.addItem(li)
         trash = sum(1 for i in vis if i.source == Source.TRASH)
         if trash and trash != len(vis):
             li = QListWidgetItem(f"In Recycle Bin  ·  {trash:,}")
@@ -741,6 +779,9 @@ class ResultsPage(QWidget):
         if getattr(self, "_trash_only", False):
             pred0 = pred
             pred = lambda it: it.source == Source.TRASH and pred0(it)  # noqa: E731
+        if getattr(self, "_surv_only", False):
+            pred1 = pred
+            pred = lambda it: it.source in SURVIVOR_SOURCES and pred1(it)  # noqa: E731
         self.proxy.pred = pred
         self.proxy.category = self.category.currentData()
         self.proxy.chances = self.chance.currentData()
@@ -769,7 +810,8 @@ class ResultsPage(QWidget):
         it = self.types.item(row)
         data = it.data(Qt.ItemDataRole.UserRole) if it else None
         self._trash_only = data == "__trash__"
-        idx = self.category.findData(None if data in (None, "__trash__") else data)
+        self._surv_only = data == "__surv__"
+        idx = self.category.findData(None if data in (None, "__trash__", "__surv__") else data)
         self.category.blockSignals(True)
         self.category.setCurrentIndex(max(idx, 0))
         self.category.blockSignals(False)

@@ -116,6 +116,10 @@ lifeline --help     # the command line
   The work is split across worker processes, each with its own read handle. One worker searches about 0.5–1.1 GB/s of data, and on NTFS/FAT/exFAT the scan can stay in free space.
 - **Smart scan** runs a quick scan, then a deep scan. A file found by both is listed once, under its real name.
 - **Lost partitions:** searches MBR (with logical partitions) and GPT tables, then every 1 MiB boundary, the 63-sector offset and the NTFS backup boot sector. Each candidate is opened read-only before it's offered to you.
+- **SSDs and TRIM:** while it scans, Lifeline reads a few KB of every deleted file. A file the SSD has already erased (it reads back as zeros) is marked *Unlikely*, or *Poor* if only part was erased, before you ever open it. **Find surviving copies** then looks for copies TRIM never touched:
+  - **Restore points and snapshots:** Windows Volume Shadow Copies ("Previous Versions"), macOS Time Machine local snapshots, Linux snapper and Timeshift. Files that are in a snapshot but gone from the drive come back complete.
+  - **Thumbnail caches:** Windows `thumbcache_*.db` and the Linux `~/.cache/thumbnails`, which hold previews of photos that were deleted.
+  - **Office and LibreOffice autosaves.**
 - **Recycle Bin / Trash:** Windows `$Recycle.Bin`, freedesktop Trash on Linux (including per-drive `.Trash-UID`), and `~/.Trash` on macOS.
 
 ### Recovering
@@ -140,6 +144,7 @@ lifeline load card.lifeline --query "type:photos" --verify --out ~/Recovered
 lifeline partitions /dev/sdb --search                    # find lost partitions
 lifeline scan /dev/sdb --partition 0 --include-existing  # browse one of them
 lifeline trash --out ~/Recovered                         # restore the Recycle Bin
+lifeline survivors --query "type:photos" --out ~/Recovered  # copies TRIM didn't erase
 lifeline image /dev/sdb /mnt/usb/sdb.img                 # resumable, bad-sector tolerant
 ```
 
@@ -154,12 +159,14 @@ lifeline/
     partitions.py   MBR / EBR / GPT and lost-partition search
     carver.py       signature search + structure-aware extractors, parallel engine
     verify.py       integrity checks        trash.py   Recycle Bin / Trash
+    trim.py         spots files SSD TRIM already erased
+    survivors.py    restore points/snapshots, thumbnail caches, autosaves
     query.py        search language         session.py smart scan, dedupe, verify, save/load
     recovery.py     parallel, verified recovery with a CSV report
     parallel.py     process pools (spawn) with per-worker read handles
   ui/               guided pages, results browser, gallery thumbnails, light/dark theme
   cli.py            command line
-tests/              153 tests
+tests/              159 tests
 ```
 
 **Deleting a file** marks its record free and its clusters available, but the data stays where it was. The quick scan reads those
@@ -174,7 +181,7 @@ RAR blocks, Ogg pages, …) to the true end of the file.
 pip install pytest && python -m pytest
 ```
 
-The 153 tests run on:
+The 159 tests run on:
 - real FAT images with real deletions (mtools) and NTFS images (`mkntfs`/`ntfscp`)
 - synthetic exFAT images and MBR/GPT disks
 - every carved format, at two block sizes, with junk headers and noise between files
@@ -185,7 +192,7 @@ those systems' own APIs. The scan engines are the same Python code on all three.
 
 ## Limits
 
-- **SSDs with TRIM** (the default) erase deleted blocks within minutes. Files may appear by name but read back as zeros. Lifeline warns when it sees this. No software can undo TRIM.
+- **SSDs with TRIM** (the default) erase deleted blocks within seconds to minutes, after which the drive returns zeros to every program. No software can undo that. Lifeline tells you which files were erased and looks for surviving copies instead. USB-connected SSDs and memory cards often don't receive TRIM, and tiny NTFS files (under about 700 bytes, stored inside the MFT) survive it.
 - Deep scan assumes each file is stored in one piece, so fragmented files come back damaged and without names. Quick scan doesn't have this problem.
 - A deleted FAT file that only had a short 8.3 name loses its first letter (shown as `_`), because that letter isn't stored anywhere.
 - Quick scan supports NTFS, FAT and exFAT. ext4, APFS, HFS+ and Btrfs get deep scan only.

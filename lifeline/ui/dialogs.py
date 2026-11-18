@@ -121,15 +121,25 @@ HELP_HTML = """
 <p><b style="color:#2E7A4C">Excellent</b>: its space hasn't been reused; it should come back whole.<br>
 <b style="color:#2E7A4C">Good</b>: found by its contents and its structure checks out.<br>
 <b style="color:#B9821B">Poor</b>: part of its space now holds other data; it may be damaged.<br>
-<b style="color:#B0392C">Unlikely</b>: another file took all of its space. Hidden unless you ask for it.</p>
+<b style="color:#B0392C">Unlikely</b>: another file took its space (hidden unless you ask), or the drive already
+erased it (SSD TRIM).</p>
 
 <h3>Quick, deep and smart scans</h3>
 <p><b>Quick scan</b> reads the drive's file records (NTFS, FAT32, exFAT), so files keep their names, folders and
 dates. <b>Deep scan</b> searches every block for known file types; it works after formatting and on any file system,
 but names are lost and fragmented files may come back damaged. <b>Smart scan</b> does both, quick first.</p>
 
-<h3>My files show up but are empty or full of zeros</h3>
-<p>That's normally an SSD with TRIM: the drive erased the deleted blocks itself. No software can undo that.</p>
+<h3>SSDs, TRIM and "Erased" files</h3>
+<p>When you delete a file on an SSD, the computer tells the drive those blocks are free (TRIM). Within seconds or
+minutes the SSD erases them, and from then on it returns zeros for them to every program. No software can undo
+that. Lifeline reads a few KB of every deleted file while scanning and marks the ones already erased as
+<b>Unlikely</b> (or <b>Poor</b> if only part is erased), so you know straight away.</p>
+<p>Copies the SSD didn't touch often survive elsewhere, and <b>Find surviving copies</b> looks for them:
+restore points (Windows "Previous Versions"), macOS Time Machine local snapshots and Linux snapper/Timeshift
+snapshots; the photo thumbnail cache; and Office/LibreOffice autosaves. Also check OneDrive, Google Drive,
+iCloud or Dropbox (their own recycle bins keep files for 30 days or more), email attachments and your phone.</p>
+<p>Small files (under about 700 bytes) on NTFS live inside the file table itself, which TRIM doesn't erase, so
+they often still come back. USB-connected SSDs and memory cards frequently don't receive TRIM at all.</p>
 
 <h3>The drive is clicking, very slow, or giving errors</h3>
 <p>Use <b>Make an image of a drive</b> first and scan the image. The drive is then read once, damaged areas are

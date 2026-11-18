@@ -41,6 +41,8 @@ class Condition:
     GOOD = "Good"                # data clusters are free and untouched
     PARTIAL = "Partly overwritten"
     OVERWRITTEN = "Overwritten"  # every cluster now belongs to another file
+    ERASED = "Erased"            # its clusters read back as zeros: SSD TRIM (or a wipe) already ran
+    PARTLY_ERASED = "Partly erased"
     UNKNOWN = "Unknown"          # carved files: structure validated, layout guessed
 
 
@@ -56,6 +58,9 @@ class Source:
     DEEP = "Deep scan"
     TRASH = "Recycle Bin"
     PARTITION = "Lost partition"
+    SNAPSHOT = "Restore point"     # Volume Shadow Copy, Time Machine local snapshot, btrfs/snapper
+    THUMBNAIL = "Thumbnail cache"  # a preview the OS kept of a photo
+    AUTOSAVE = "Autosave"          # Office / LibreOffice recovery copies
 
 
 @dataclass
@@ -98,15 +103,22 @@ class RecoverableItem:
         return None
 
     @property
+    def hidden_by_default(self) -> bool:
+        """Overwritten files hold another file's data: hide them. Erased ones stay visible, so
+        people can see what was lost and look for surviving copies."""
+        return self.deleted and self.file_path is None and self.condition == Condition.OVERWRITTEN
+
+    @property
     def chance(self) -> str:
         """A plain-language guess at how well this file will come back."""
+        # Settled facts first, so a later "Check file" can never move a file between them.
+        if self.condition in (Condition.OVERWRITTEN, Condition.ERASED) and self.deleted and self.file_path is None:
+            return CHANCE_NONE
         if self.verified == "damaged":
             return CHANCE_POOR
         if self.file_path is not None or not self.deleted:
             return CHANCE_EXCELLENT
-        if self.condition == Condition.OVERWRITTEN:
-            return CHANCE_NONE
-        if self.condition == Condition.PARTIAL:
+        if self.condition in (Condition.PARTIAL, Condition.PARTLY_ERASED):
             return CHANCE_POOR
         if self.condition == Condition.GOOD:
             return CHANCE_EXCELLENT

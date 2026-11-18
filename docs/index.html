@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..600&family=Schibsted+Grotesk:wght@400..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 <script>document.documentElement.classList.add("js"); if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("motion");</script>
 </head>
 <body>
@@ -179,11 +179,16 @@
     </figure>
   </article>
 
-  <div class="grid two">
+  <div class="grid three">
     <div class="tile reveal">
       <h3>Lost partitions</h3>
       <p>Lifeline reads MBR (with logical partitions) and GPT tables, then searches the disk for boot sectors that are no longer listed. It even finds an NTFS volume whose first sector was wiped, using its backup copy. Every candidate is opened read-only before you see it.</p>
       <span class="stack">MBR · EBR · GPT · 1 MiB + 63-sector alignment</span>
+    </div>
+    <div class="tile reveal">
+      <h3>Honest about SSDs</h3>
+      <p>On an SSD, TRIM erases deleted files within minutes, and no software can undo it. Lifeline checks every deleted file while it scans and tells you up front which ones the drive already erased. Then it looks for the copies TRIM never touched: restore points and snapshots, photo thumbnail caches, and Office autosaves.</p>
+      <span class="stack">Volume Shadow Copies · Time Machine snapshots · thumbcache · autosaves</span>
     </div>
     <div class="tile reveal">
       <h3>Smart scan</h3>

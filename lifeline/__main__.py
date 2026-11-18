@@ -5,7 +5,7 @@ import sys
 
 def main():
     multiprocessing.freeze_support()  # scan workers re-enter here in frozen builds
-    if len(sys.argv) > 1 and sys.argv[1] in ("list", "scan", "load", "partitions", "trash", "image",
+    if len(sys.argv) > 1 and sys.argv[1] in ("list", "scan", "load", "partitions", "trash", "image", "survivors",
                                              "-h", "--help", "--version"):
         from lifeline.cli import main as cli
         sys.exit(cli())

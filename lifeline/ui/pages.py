@@ -201,6 +201,7 @@ class SetupPage(QWidget):
     start = pyqtSignal(dict)       # options
     back = pyqtSignal()
     partitionChanged = pyqtSignal(object)
+    survivorsRequested = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -340,10 +341,14 @@ class SetupPage(QWidget):
         self.part_combo.setVisible(len(parts) > 1)
 
         if vol is not None and vol.media == "SSD" and vol.trim is not False:
+            btn = QPushButton("Find surviving copies")
+            btn.setToolTip("Restore points and snapshots, photo thumbnail caches and Office autosaves.")
+            btn.clicked.connect(self.survivorsRequested)
             self.notice_box.addWidget(Notice(
-                "This is an SSD",
-                "SSDs usually erase deleted data within minutes (TRIM). Files may show up with their names but "
-                "contain only zeros. Scan now, and check previews before recovering."))
+                "This is an SSD with TRIM",
+                "SSDs usually erase deleted data within minutes, and no software can undo that. Lifeline marks "
+                "files it finds already erased, so you know straight away. Copies the SSD didn't touch often "
+                "survive in restore points, the thumbnail cache and Office autosaves.", action=btn))
         if vol is not None and vol.is_system:
             self.notice_box.addWidget(Notice(
                 "This is your system drive",

@@ -7,6 +7,7 @@
   lifeline load scan.lifeline --query "type:photos" --out ~/Recovered
   lifeline partitions /dev/sdb --search
   lifeline trash --out ~/Recovered
+  lifeline survivors --query "type:photos" --out ~/Recovered
   lifeline image /dev/sdb ~/sdb.img
 """
 from __future__ import annotations
@@ -23,7 +24,7 @@ from .core.query import compile_query
 from .core.recovery import RecoveryError, recover
 from .core.session import ScanSession
 
-COMMANDS = ("list", "scan", "load", "partitions", "trash", "image")
+COMMANDS = ("list", "scan", "load", "partitions", "trash", "image", "survivors")
 
 
 def _source(arg: str) -> str:
@@ -96,7 +97,7 @@ def _open(src_arg: str, partition_index=None):
 def _finish(s: ScanSession, args):
     items = s.items
     if not args.include_overwritten:
-        items = [i for i in items if not (i.chance == "Unlikely" and i.deleted)]
+        items = [i for i in items if not i.hidden_by_default]
     if getattr(args, "query", None):
         pred = compile_query(args.query)
         items = [i for i in items if pred(i)]
@@ -106,6 +107,10 @@ def _finish(s: ScanSession, args):
     if getattr(args, "save", None):
         s.save(args.save)
         print(f"Scan saved to {args.save}", file=sys.stderr)
+    erased = sum(1 for i in items if i.condition in ("Erased", "Partly erased"))
+    if erased:
+        print(f"\n{erased:,} of these were already erased by the drive (SSD TRIM) and read back as zeros. "
+              "Try `lifeline survivors` for restore points, thumbnails and autosaves.", file=sys.stderr)
     print(f"\n{len(items):,} files ({human_size(sum(i.size for i in items))})")
     if args.list_only or not args.out:
         for i in items[: args.limit]:
@@ -173,6 +178,16 @@ def cmd_trash(args):
     return _finish(s, args)
 
 
+def cmd_survivors(args):
+    s = ScanSession(None, "this computer")
+    s.find_surviving_copies(Bar(), _never, snapshots=not args.no_snapshots, thumbnails=not args.no_thumbnails,
+                            autosaves=not args.no_autosaves)
+    try:
+        return _finish(s, args)
+    finally:
+        s.close()  # unmounts any snapshots we mounted
+
+
 def cmd_partitions(args):
     try:
         s = ScanSession(_source(args.source), args.source)
@@ -212,7 +227,7 @@ def _add_output_args(p):
     p.add_argument("--match", dest="query", help=argparse.SUPPRESS)  # v1 name
     p.add_argument("--out", "-o", help="folder to recover into (must be on another drive)")
     p.add_argument("--flat", action="store_true", help="don't recreate original folders")
-    p.add_argument("--include-overwritten", action="store_true", help="also list files marked Unlikely")
+    p.add_argument("--include-overwritten", action="store_true", help="also list overwritten files")
     p.add_argument("--list-only", action="store_true")
     p.add_argument("--limit", type=int, default=200)
     p.add_argument("--verify", action="store_true", help="check every listed file's structure before output")
@@ -247,6 +262,12 @@ def main(argv=None):
     tr = sub.add_parser("trash", help="list or restore files in the Recycle Bin / Trash")
     _add_output_args(tr)
 
+    sv = sub.add_parser("survivors", help="copies SSD TRIM didn't erase: restore points, thumbnails, autosaves")
+    sv.add_argument("--no-snapshots", action="store_true")
+    sv.add_argument("--no-thumbnails", action="store_true")
+    sv.add_argument("--no-autosaves", action="store_true")
+    _add_output_args(sv)
+
     pt = sub.add_parser("partitions", help="list partitions on a disk, optionally searching for lost ones")
     pt.add_argument("source")
     pt.add_argument("--search", action="store_true", help="search the whole disk for lost partitions")
@@ -257,7 +278,7 @@ def main(argv=None):
     im.add_argument("--restart", action="store_true", help="start over instead of continuing an existing image")
     args = p.parse_args(argv)
     return {"list": cmd_list, "scan": cmd_scan, "load": cmd_load, "trash": cmd_trash,
-            "partitions": cmd_partitions, "image": cmd_image}[args.cmd](args)
+            "partitions": cmd_partitions, "image": cmd_image, "survivors": cmd_survivors}[args.cmd](args)
 
 
 if __name__ == "__main__":

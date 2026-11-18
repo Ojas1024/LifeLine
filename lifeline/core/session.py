@@ -20,6 +20,7 @@ from .carver import SIGNATURES, Carver
 from .disk import DiskError, DiskReader, is_device_path
 from .filesystems import FileSystem, FSError, detect_filesystem
 from .models import Cancelled, OnBlock, OnFound, Progress, RecoverableItem, Source
+from .trim import mark_erased
 
 SESSION_VERSION = 2
 NoOp = lambda *a, **k: None  # noqa: E731
@@ -42,6 +43,8 @@ class ScanSession:
         self.reader: Optional[DiskReader] = None
         self.fs: Optional[FileSystem] = None
         self.fs_error: Optional[str] = None
+        self.erased_count = 0
+        self._cleanups: list = []        # e.g. unmount snapshots we mounted
         if source_path is None:
             return                                   # a Recycle-Bin-only session
         self.disk = DiskReader(source_path)
@@ -135,13 +138,28 @@ class ScanSession:
         if not self.fs:
             raise FSError(self.fs_error or "Quick scan needs an NTFS, FAT or exFAT drive.")
         base = len(self.items)
-        found = self.fs.scan_deleted(progress, cancelled, (lambda n: on_found(base + n)) if on_found else None,
+        found = self.fs.scan_deleted(_scaled(progress, 0, 0.9), cancelled,
+                                     (lambda n: on_found(base + n)) if on_found else None,
                                      include_existing=include_existing,
                                      workers=workers or self.default_workers())
         if self.partition is not None and getattr(self.partition, "origin", "") == "Found":
             for it in found:
                 it.source = Source.PARTITION
+        # Read a few KB of each deleted file now, so SSD-erased files are labelled from the start
+        # instead of looking "Excellent" until someone opens them.
+        if not cancelled():
+            self.erased_count = mark_erased(self.reader, found, _scaled(progress, 0.9, 1.0), cancelled,
+                                            ssd=self.media == "SSD",
+                                            workers=4 if self.media == "HDD" and not self.is_image else 16)
         return self._add(found)
+
+    def find_surviving_copies(self, progress: Progress, cancelled: Cancelled,
+                              snapshots: bool = True, thumbnails: bool = True, autosaves: bool = True
+                              ) -> List[RecoverableItem]:
+        """Copies TRIM never touched: restore points/snapshots, thumbnail caches, Office autosaves."""
+        from .survivors import find_all
+        return self._add(find_all(progress, cancelled, snapshots=snapshots, thumbnails=thumbnails,
+                                  autosaves=autosaves, cleanups=self._cleanups))
 
     def deep_scan(self, keys: List[str], free_space_only: bool, progress: Progress, cancelled: Cancelled,
                   on_found: Optional[OnFound] = None, on_block: Optional[OnBlock] = None,
@@ -298,6 +316,12 @@ class ScanSession:
         return s
 
     def close(self):
+        for fn in self._cleanups:
+            try:
+                fn()
+            except Exception:
+                pass
+        self._cleanups = []
         if self.reader is not None and self.reader is not self.disk:
             self.reader.close()
         if self.disk is not None:
