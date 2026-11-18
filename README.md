@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="lifeline/assets/icon.svg" width="96" height="96" alt="Lifeline icon">
+<img src="https://raw.githubusercontent.com/Ojas1024/LifeLine/main/lifeline/assets/icon.svg" width="96" height="96" alt="Lifeline icon">
 
 # Lifeline
 
@@ -15,7 +15,7 @@ A guided desktop app and a command-line tool for Windows, macOS and Linux.
 ![Python](https://img.shields.io/badge/Python-3.10%2B-0b0b0b?style=flat-square&logo=python&logoColor=white)
 ![PyQt6](https://img.shields.io/badge/GUI-PyQt6-0b0b0b?style=flat-square&logo=qt&logoColor=white)
 
-<img src="docs/assets/screens/dark-gallery.png" width="860" alt="Lifeline showing recovered holiday photos in a gallery">
+<img src="https://raw.githubusercontent.com/Ojas1024/LifeLine/main/docs/assets/screens/dark-gallery.png" width="860" alt="Lifeline showing recovered holiday photos in a gallery">
 
 </div>
 
@@ -47,12 +47,20 @@ cd LifeLine
 pip install -r requirements.txt      # PyQt6
 ```
 
+Or install it from PyPI and get a `lifeline` command:
+
+```bash
+pip install lifeline-recovery
+lifeline            # the app
+lifeline --help     # the command line
+```
+
 | System | Start it |
 |---|---|
 | **Windows** | double-click `run.bat` (it asks for administrator rights), or `python -m lifeline` in an admin terminal |
 | **Linux** | `./run.sh`: the app offers to restart itself with admin rights (pkexec), or run `sudo -E python3 -m lifeline` |
 | **macOS** | `./run.sh`: the app asks for your password. Also allow Full Disk Access for it in *System Settings → Privacy & Security* |
-| **pip** | `pip install .` and then just `lifeline` |
+| **pip** | `pip install lifeline-recovery`, then just `lifeline` |
 
 **Portable builds.** `build_exe.bat` gives `dist\Lifeline.exe`, one file that asks for admin rights on launch.
 `./build.sh` gives `dist/Lifeline` on Linux or `dist/Lifeline.app` on macOS. Put the build on a USB stick and run it from there.
@@ -61,16 +69,16 @@ pip install -r requirements.txt      # PyQt6
 
 <table>
 <tr>
-<td width="50%"><img src="docs/assets/screens/dark-start.png" alt="What happened? screen"></td>
-<td width="50%"><img src="docs/assets/screens/dark-scanning.png" alt="Live scan with disk map"></td>
+<td width="50%"><img src="https://raw.githubusercontent.com/Ojas1024/LifeLine/main/docs/assets/screens/dark-start.png" alt="What happened? screen"></td>
+<td width="50%"><img src="https://raw.githubusercontent.com/Ojas1024/LifeLine/main/docs/assets/screens/dark-scanning.png" alt="Live scan with disk map"></td>
 </tr>
 <tr>
 <td><b>Guided start.</b> Four plain choices set the scan up for you. Advanced options stay folded away.</td>
 <td><b>Live scan.</b> A map of the drive fills in as it's searched, with the files found, read speed and time left. Pause or stop any time.</td>
 </tr>
 <tr>
-<td><img src="docs/assets/screens/light-list.png" alt="Results list with preview"></td>
-<td><img src="docs/assets/screens/light-search.png" alt="Searching results"></td>
+<td><img src="https://raw.githubusercontent.com/Ojas1024/LifeLine/main/docs/assets/screens/light-list.png" alt="Results list with preview"></td>
+<td><img src="https://raw.githubusercontent.com/Ojas1024/LifeLine/main/docs/assets/screens/light-search.png" alt="Searching results"></td>
 </tr>
 <tr>
 <td><b>Plain recovery chances.</b> Each file is <i>Excellent</i>, <i>Good</i>, <i>Poor</i> or <i>Unlikely</i>, with a preview and a warning when an SSD has already erased it.</td>

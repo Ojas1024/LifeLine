@@ -120,7 +120,7 @@ h3 { font: 600 24px/1.25 var(--sans); color: var(--ink); letter-spacing: -.015em
 .window img { display: block; width: 100%; height: auto; }
 .collage .window { left: 0; top: 10%; width: 82%; }
 .chance { right: 0; top: 0; width: 46%; padding: 16px 18px 14px; overflow: hidden; background: #1f1d1a; }
-.chance ul { display: grid; gap: 7px; margin-top: 10px; }
+.chance ul { display: grid; grid-template-columns: minmax(0, 1fr); gap: 7px; margin-top: 10px; min-width: 0; }
 .chance li { display: flex; align-items: baseline; gap: 10px; min-width: 0; font: 12px var(--mono); color: var(--body); }
 .chance li span { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .chance b { flex: none; font-weight: 500; white-space: nowrap; }
