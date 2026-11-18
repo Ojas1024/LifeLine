@@ -6,6 +6,7 @@ cd "$(dirname "$0")"
 PY=${PYTHON:-python3}
 "$PY" -m pip install -r requirements.txt pyinstaller
 if [ "$(uname)" = "Darwin" ]; then
+  "$PY" -m pip install pillow   # converts the .ico to the .icns macOS needs
   "$PY" -m PyInstaller --noconfirm --windowed --name Lifeline --icon lifeline/assets/icon.ico \
     --osx-bundle-identifier org.lifeline.recovery \
     --add-data "lifeline/assets:lifeline/assets" --collect-submodules lifeline launcher.py

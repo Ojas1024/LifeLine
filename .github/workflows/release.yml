@@ -69,6 +69,7 @@ jobs:
       - name: Build (macOS)
         if: runner.os == 'macOS'
         run: |
+          pip install pillow   # converts the .ico to the .icns macOS needs
           pyinstaller --noconfirm --windowed --name Lifeline --icon lifeline/assets/icon.ico \
             --osx-bundle-identifier io.github.ojas1024.lifeline \
             --add-data "lifeline/assets:lifeline/assets" --collect-submodules lifeline launcher.py
