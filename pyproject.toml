@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lifeline-recovery"
+version = "2.0.0"
+description = "Recover deleted files from NTFS, FAT and exFAT drives, disks and images (GUI + CLI)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["PyQt6>=6.5"]
+
+[project.scripts]
+lifeline = "lifeline.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["lifeline*"]
+
+[tool.setuptools.package-data]
+lifeline = ["assets/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

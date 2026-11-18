@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lifeline · Get deleted files back</title>
+<meta name="description" content="Lifeline recovers deleted photos, documents and folders from drives, USB sticks and memory cards. A guided app and command-line tool for Windows, macOS and Linux.">
+<meta name="theme-color" content="#121110">
+<meta property="og:title" content="Lifeline · Deleted isn't gone">
+<meta property="og:description" content="A guided file-recovery app for Windows, macOS and Linux: names and folders from NTFS, FAT and exFAT, 20 formats by content, lost partitions, and the Recycle Bin.">
+<meta property="og:image" content="https://ojas1024.github.io/LifeLine/assets/screens/dark-gallery.png">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..600&family=Schibsted+Grotesk:wght@400..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add("js"); if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("motion");</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wash" aria-hidden="true"><i data-w="hero"></i><i data-w="rescue"></i><i data-w="scans"></i><i data-w="review"></i><i data-w="safety"></i><i data-w="get"></i></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <a class="brand" href="#top" aria-label="Lifeline, home">
+    <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+      <g class="blocks"><rect x="9" y="25" width="12" height="12" rx="2.5"/><rect x="25" y="25" width="12" height="12" rx="2.5"/><rect x="9" y="41" width="12" height="12" rx="2.5"/><rect x="25" y="41" width="12" height="12" rx="2.5"/><rect x="41" y="41" width="12" height="12" rx="2.5"/></g>
+      <rect class="slot" x="41.75" y="25.75" width="10.5" height="10.5" rx="2"/>
+      <path class="rope" d="M47 25.5 C47 20, 48.5 17, 50.5 15.8"/>
+      <rect class="lifted" x="44" y="5.5" width="13" height="13" rx="2.8"/>
+    </svg>
+    <span>Lifeline</span>
+  </a>
+  <nav class="progress" aria-label="Sections">
+    <a href="#rescue" data-s="rescue" title="Rescue"></a><a href="#scans" data-s="scans" title="Scans"></a><a href="#review" data-s="review" title="Review"></a><a href="#safety" data-s="safety" title="Safety"></a><a href="#get" data-s="get" title="Get it"></a>
+  </nav>
+  <nav class="links" aria-label="Main">
+    <a href="#scans">Features</a><a href="#get">Get it</a><a href="https://github.com/Ojas1024/LifeLine">GitHub</a>
+  </nav>
+</header>
+
+<main id="main">
+<!-- ───────────── hero ───────────── -->
+<section class="hero" id="top" data-wash="hero">
+  <div class="hero-copy">
+    <p class="eyebrow reveal">File recovery · Windows · macOS · Linux</p>
+    <h1 class="display reveal"><span class="grey">Deleted</span><br><span class="grey">isn't</span> <em>gone.</em></h1>
+    <p class="lede reveal">Lifeline gets back deleted photos, documents and whole folders from drives, USB sticks and memory cards. It asks what happened, picks the right scan, and only ever reads from your drive.</p>
+    <div class="cta reveal">
+      <a class="button" href="#get">Get Lifeline <svg viewBox="0 0 16 16"><path d="M8 3v10M3.5 8.5 8 13l4.5-4.5"/></svg></a>
+      <a class="button ghost" href="https://github.com/Ojas1024/LifeLine">Source on GitHub <svg viewBox="0 0 16 16"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+    </div>
+    <svg class="pulse reveal" viewBox="0 0 600 60" aria-hidden="true" preserveAspectRatio="none"><path d="M0 34 H170 L186 34 L196 14 L210 54 L222 6 L236 46 L246 34 H600"/></svg>
+  </div>
+
+  <div class="collage" aria-hidden="true">
+    <div class="card window tilt" style="--r:-3deg" data-depth="16">
+      <div class="tabbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tab">Lifeline · 15 files found on SD card</span></div>
+      <img src="assets/screens/dark-gallery.png" width="1360" height="820" alt="">
+    </div>
+    <div class="card chance tilt" style="--r:4deg" data-depth="30">
+      <p class="kicker">Recovery chance</p>
+      <ul>
+        <li><span>Thesis final draft.docx</span><b class="ok">Excellent</b></li>
+        <li><span>Birthday 2025-04.jpg</span><b class="ok">Excellent</b></li>
+        <li><span>DOCX_00003.docx</span><b class="good">Good</b></li>
+        <li><span>old_backup.zip</span><b class="poor">Poor</b></li>
+      </ul>
+    </div>
+    <div class="card map tilt" style="--r:-6deg" data-depth="12">
+      <div class="cells" data-cells="96"></div>
+      <span class="tag">deep scan · <span class="mapcount">0</span> files found</span>
+    </div>
+    <div class="card term tilt" style="--r:3deg" data-depth="24">
+      <p><span class="pr">$</span> lifeline scan D: --out E:\Recovered</p>
+      <p class="ok">● 1,284 files · names and folders kept</p>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── chapter switcher ───────────── -->
+<div class="switcher" id="work">
+  <p class="eyebrow">How it helps</p>
+  <div class="chips"><a href="#rescue">Rescue</a><a href="#scans">Scans</a><a href="#review">Review</a><a href="#safety">Safety</a><a href="#get">Get it</a></div>
+</div>
+
+<!-- ───────────── rescue ───────────── -->
+<section class="chapter" id="rescue" data-wash="rescue">
+  <div class="chapter-head">
+    <p class="num">01 · Rescue</p>
+    <h2 class="display reveal"><span class="grey">Just say what</span> <em>happened.</em></h2>
+    <p class="sub reveal">You don't need to know what an MFT or file carving is. Pick the closest match and Lifeline sets up the right scan. You can still change everything later.</p>
+  </div>
+  <div class="grid four">
+    <div class="tile reveal">
+      <svg class="glyph" viewBox="0 0 32 32" aria-hidden="true"><path d="M7 9h18M12 9V6h8v3M9 9l1.5 17h11L23 9M14 14v7M18 14v7"/></svg>
+      <h3>I deleted files by mistake</h3>
+      <p>Shift+Delete, an emptied Recycle Bin, an app that cleaned up. Files come back with their <b>original names and folders</b>.</p>
+      <span class="stack">Smart scan</span>
+    </div>
+    <div class="tile reveal">
+      <svg class="glyph" viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="5" width="18" height="22" rx="2.5"/><path d="M11 5v6h10V5M11 18h10M11 22h6"/></svg>
+      <h3>A drive or card was formatted</h3>
+      <p>USB sticks, SD cards and drives that show as RAW. Lifeline searches every block for photos, documents, videos and more.</p>
+      <span class="stack">Deep scan · whole drive</span>
+    </div>
+    <div class="tile reveal">
+      <svg class="glyph" viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="8" width="22" height="16" rx="2.5"/><path d="M16 8v16" stroke-dasharray="2.4 2.4"/><circle cx="21.5" cy="16" r="2"/></svg>
+      <h3>A partition disappeared</h3>
+      <p>A drive letter is gone or a partition was deleted. Lifeline finds lost partitions and lets you browse them like a normal drive.</p>
+      <span class="stack">Partition search</span>
+    </div>
+    <div class="tile reveal">
+      <svg class="glyph" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 5l4 6h-3v6h-2v-6h-3zM7 17l-2 7h22l-2-7M9 24v3h14v-3"/></svg>
+      <h3>Check the Recycle Bin first</h3>
+      <p>Takes a second. Lifeline reads the Recycle Bin and Trash on every OS, with each file's original location and deletion date.</p>
+      <span class="stack">Windows · Linux · macOS</span>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── scans ───────────── -->
+<section class="chapter" id="scans" data-wash="scans">
+  <div class="chapter-head">
+    <p class="num">02 · Scans</p>
+    <h2 class="display reveal"><span class="grey">Names first,</span> <em>then everything else.</em></h2>
+    <p class="sub reveal">Deleting a file mostly just marks its space as free. Lifeline reads back what the file system forgot, and when that's gone too, it finds files by what's inside them.</p>
+  </div>
+
+  <article class="feature">
+    <div class="feature-copy reveal">
+      <h3>Quick scan <span class="dim">· names, folders, dates</span></h3>
+      <p>Lifeline reads the records that NTFS, FAT and exFAT leave behind. It rebuilds the folder tree, including folders that were deleted too, and checks every file against the allocation map so you know whether its space has been reused. On NTFS the records are parsed on every CPU core.</p>
+      <ul class="facts">
+        <li><b>3</b><span>file systems: NTFS, FAT12/16/32, exFAT</span></li>
+        <li><b>all</b><span>CPU cores parse the NTFS MFT</span></li>
+        <li><b>0</b><span>bytes written to the drive you scan</span></li>
+      </ul>
+      <p class="stack">MFT · $Bitmap · LFN · exFAT entry sets · backup boot sector</p>
+    </div>
+    <figure class="feature-visual reveal" aria-hidden="true">
+      <div class="card tree tilt" style="--r:2.5deg" data-depth="16">
+        <p class="kicker">SD card · quick scan</p>
+<pre><span class="d">▾</span> DCIM
+  <span class="d">▾</span> Holiday 2025 <span class="del">deleted folder</span>
+      Beach 2025-01.jpg      <i class="g"></i>
+      Sunset 2025-02.jpg     <i class="g"></i>
+      Mountains 2025-03.jpg  <i class="g"></i>
+<span class="d">▾</span> Documents
+  <span class="d">▾</span> University <span class="del">deleted folder</span>
+      Thesis final draft.docx <i class="g"></i>
+      Lab report 3.docx      <i class="g"></i>
+    Shopping list.txt        <i class="g"></i></pre>
+      </div>
+    </figure>
+  </article>
+
+  <article class="feature flip">
+    <div class="feature-copy reveal">
+      <h3>Deep scan <span class="dim">· by content</span></h3>
+      <p>After formatting, or on a file system Lifeline can't read, it searches every block for the start of a known file. It then follows that format's own structure (JPEG segments, ZIP directories, MP4 boxes, RAR blocks, Ogg pages) to where the file really ends, and throws away random matches. The work is split across worker processes, each with its own read handle.</p>
+      <ul class="facts">
+        <li><b>20</b><span>format families, photos to databases</span></li>
+        <li><b>~1 GB/s</b><span>searched per worker process</span></li>
+        <li><b>1×</b><span>each file listed once, even if both scans find it</span></li>
+      </ul>
+    </div>
+    <figure class="feature-visual reveal" aria-hidden="true">
+      <div class="card formats tilt" style="--r:-2.5deg" data-depth="14">
+        <p class="kicker">Recognised by content</p>
+        <div class="fchips">
+          <span class="c-img">JPEG</span><span class="c-img">PNG</span><span class="c-img">HEIC</span><span class="c-img">RAW · CR2 · NEF · ARW · DNG</span><span class="c-img">GIF</span><span class="c-img">PSD</span><span class="c-img">BMP · TIFF</span>
+          <span class="c-doc">PDF</span><span class="c-doc">DOCX · XLSX · PPTX</span><span class="c-doc">DOC · XLS · PPT</span><span class="c-doc">ODT · EPUB</span><span class="c-doc">MSG</span>
+          <span class="c-vid">MP4 · MOV</span><span class="c-vid">MKV · WebM</span><span class="c-vid">AVI · WMV</span>
+          <span class="c-aud">MP3</span><span class="c-aud">FLAC</span><span class="c-aud">Ogg · Opus</span><span class="c-aud">WAV · WMA</span>
+          <span class="c-arc">ZIP</span><span class="c-arc">RAR</span><span class="c-arc">7z</span><span class="c-dat">SQLite</span><span class="c-dat">EXE · DLL</span>
+        </div>
+      </div>
+    </figure>
+  </article>
+
+  <div class="grid two">
+    <div class="tile reveal">
+      <h3>Lost partitions</h3>
+      <p>Lifeline reads MBR (with logical partitions) and GPT tables, then searches the disk for boot sectors that are no longer listed. It even finds an NTFS volume whose first sector was wiped, using its backup copy. Every candidate is opened read-only before you see it.</p>
+      <span class="stack">MBR · EBR · GPT · 1 MiB + 63-sector alignment</span>
+    </div>
+    <div class="tile reveal">
+      <h3>Smart scan</h3>
+      <p>Most people want this one: a quick scan for names and folders, then a deep scan of free space for anything older. A file found by both is listed once, under its real name, so the live count matches what you'll see.</p>
+      <span class="stack">quick → deep · free space only · deduplicated</span>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── review ───────────── -->
+<section class="chapter" id="review" data-wash="review">
+  <div class="chapter-head">
+    <p class="num">03 · Review</p>
+    <h2 class="display reveal"><span class="grey">Find the one file</span> <em>that matters.</em></h2>
+    <p class="sub reveal">Thousands of results are only useful if you can find yours. Browse by type or folder, flip to a photo gallery, preview anything, and search like you think.</p>
+  </div>
+
+  <div class="showcase reveal" aria-hidden="true">
+    <div class="card window big tilt" style="--r:-1.5deg" data-depth="10">
+      <div class="tabbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tab">Results · list, preview and recovery chances</span></div>
+      <img src="assets/screens/light-list.png" width="1360" height="820" alt="" loading="lazy">
+    </div>
+    <div class="card window small tilt" style="--r:3deg" data-depth="22">
+      <div class="tabbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tab">Live scan</span></div>
+      <img src="assets/screens/dark-scanning.png" width="1360" height="820" alt="" loading="lazy">
+    </div>
+  </div>
+
+  <article class="feature">
+    <div class="feature-copy reveal">
+      <h3>Search that speaks plainly <span class="dim">· and powerfully</span></h3>
+      <p>Type words, wildcards or filters, and combine them freely. If you mistype a filter, the search just matches less; it never errors. The same language works on the command line.</p>
+      <ul class="qlist">
+        <li><code>*.docx</code><span>wildcards on the name</span></li>
+        <li><code>type:photos size:&gt;5mb</code><span>kinds and sizes</span></li>
+        <li><code>modified:2024-01..2024-06</code><span>date ranges</span></li>
+        <li><code>in:Documents -backup</code><span>inside a folder, leaving some out</span></li>
+        <li><code>"final draft"</code> <code>re:^IMG_\d+</code><span>phrases and regex</span></li>
+      </ul>
+    </div>
+    <figure class="feature-visual reveal" aria-hidden="true">
+      <div class="card term big tilt" style="--r:2deg" data-depth="16">
+        <p class="dim">Search your results</p>
+        <p><span class="pr">⌕</span> <span class="typed" data-texts='["thesis *.docx","type:photos modified:2025","size:>100mb ext:mp4,mov","in:DCIM -screenshot"]'></span></p>
+        <p class="ok">● Excellent: its space hasn't been reused</p>
+        <p class="warn">● Poor: partly overwritten, may be damaged</p>
+      </div>
+    </figure>
+  </article>
+
+  <div class="grid three">
+    <div class="tile reveal"><h3>Recovery chance, in words</h3><p>Every file is Excellent, Good, Poor or Unlikely, with a sentence that says why. Overwritten files stay hidden unless you ask for them.</p></div>
+    <div class="tile reveal"><h3>Check before you recover</h3><p>Lifeline reads the files and tests their structure: ZIP and PNG CRCs, JPEG scan data, PDF cross-references, SQLite integrity, RAR/7z/Ogg checksums. Nothing is written.</p></div>
+    <div class="tile reveal"><h3>Save the scan</h3><p>Keep the results in a <code>.lifeline</code> file and come back tomorrow without scanning a 2 TB drive again.</p></div>
+  </div>
+</section>
+
+<!-- ───────────── safety ───────────── -->
+<section class="chapter about" id="safety" data-wash="safety">
+  <div class="chapter-head">
+    <p class="num">04 · Safety</p>
+    <h2 class="display reveal"><span class="grey">First,</span> <em>do no harm.</em></h2>
+  </div>
+  <div class="about-grid">
+    <div class="reveal">
+      <p class="big">A recovery tool that writes to the drive it's recovering from can destroy the very files you want. So Lifeline only ever reads, and it won't let you save onto the source drive, even by accident.</p>
+      <p>It's also honest with you. When an SSD has already erased a file's blocks (TRIM), the preview says so instead of handing you a file full of zeros.</p>
+    </div>
+    <ul class="list reveal">
+      <li><span>Reads</span>Read-only access to the drive it scans, always</li>
+      <li><span>Guards</span>Refuses to recover onto the same drive: drive letters and physical disks, Linux partitions and device-mapper, macOS APFS stores</li>
+      <li><span>Images</span>Copies a failing drive to a file first, skips bad areas then retries them, and resumes if interrupted</li>
+      <li><span>Sectors</span>A bad sector costs 4 KB, not the whole scan</li>
+      <li><span>Report</span>A CSV of every recovered file and its condition</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ───────────── get it ───────────── -->
+<section class="chapter" id="get" data-wash="get">
+  <div class="chapter-head">
+    <p class="num">05 · Get it</p>
+    <h2 class="display reveal"><span class="grey">Runs where</span> <em>you are.</em></h2>
+    <p class="sub reveal">Python 3.10+ and PyQt6. Install it on a <b>different</b> drive from the one you lost files on, ideally a USB stick.</p>
+  </div>
+  <div class="grid three">
+    <div class="tile os reveal">
+      <h3>Windows</h3>
+      <p>Double-click <code>run.bat</code>; it asks for administrator rights, which Windows needs for direct drive access. Or build one portable <code>Lifeline.exe</code> with <code>build_exe.bat</code>.</p>
+      <div class="cmd"><code>python -m lifeline</code><button type="button" data-copy="python -m lifeline">Copy</button></div>
+    </div>
+    <div class="tile os reveal">
+      <h3>macOS</h3>
+      <p>Run <code>./run.sh</code>. Lifeline asks for your password to read drives; allow it Full Disk Access too. <code>./build.sh</code> makes <code>Lifeline.app</code>.</p>
+      <div class="cmd"><code>./run.sh</code><button type="button" data-copy="./run.sh">Copy</button></div>
+    </div>
+    <div class="tile os reveal">
+      <h3>Linux</h3>
+      <p>Run <code>./run.sh</code>. Lifeline offers to restart itself with admin rights through pkexec, or you can start it with sudo.</p>
+      <div class="cmd"><code>sudo -E python3 -m lifeline</code><button type="button" data-copy="sudo -E python3 -m lifeline">Copy</button></div>
+    </div>
+  </div>
+
+  <div class="install card reveal">
+    <div class="tabbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tab">terminal</span><button type="button" class="copy-all" data-copy="git clone https://github.com/Ojas1024/LifeLine.git
+cd LifeLine
+pip install -r requirements.txt
+python -m lifeline">Copy</button></div>
+<pre><span class="c"># get it</span>
+<span class="pr">$</span> git clone https://github.com/Ojas1024/LifeLine.git && cd LifeLine
+<span class="pr">$</span> pip install -r requirements.txt
+<span class="pr">$</span> python -m lifeline                 <span class="c"># the app</span>
+
+<span class="c"># or straight from the terminal</span>
+<span class="pr">$</span> lifeline scan D: --out E:\Recovered
+<span class="pr">$</span> lifeline scan /dev/sdb1 --query "*.docx modified:2024" --out ~/Recovered
+<span class="pr">$</span> lifeline partitions /dev/sdb --search
+<span class="pr">$</span> lifeline image /dev/sdb /mnt/usb/sdb.img   <span class="c"># resumable</span></pre>
+  </div>
+</section>
+
+<!-- ───────────── closing ───────────── -->
+<section class="closing" data-wash="get">
+  <svg class="pulse wide reveal" viewBox="0 0 600 60" aria-hidden="true" preserveAspectRatio="none"><path d="M0 34 H250 L266 34 L276 14 L290 54 L302 6 L316 46 L326 34 H600"/></svg>
+  <h2 class="display reveal"><span class="grey">Your files,</span> <em>back.</em></h2>
+  <div class="cta center reveal">
+    <a class="button large" href="https://github.com/Ojas1024/LifeLine">Get Lifeline on GitHub <svg viewBox="0 0 16 16"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+    <a class="button ghost large" href="#rescue">How it works <svg viewBox="0 0 16 16"><path d="M8 3v10M3.5 8.5 8 13l4.5-4.5"/></svg></a>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <span>Lifeline · made by <a href="https://ojas1024.github.io/">Ojas Gupta</a></span>
+  <nav><a href="https://github.com/Ojas1024/LifeLine">GitHub</a><a href="https://github.com/Ojas1024/LifeLine#command-line">Command line</a><a href="https://ojas1024.github.io/">ojas1024.github.io</a></nav>
+</footer>
+<script src="main.js"></script>
+</body>
+</html>

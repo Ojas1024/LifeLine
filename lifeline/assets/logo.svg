@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 64" width="600" height="128" role="img" aria-label="Lifeline File Recovery">
+  <title>Lifeline File Recovery</title>
+  <g>
+    <rect width="64" height="64" rx="14" fill="#1F5FAD"/>
+    <g fill="#FFFFFF" fill-opacity="0.32">
+      <rect x="9"  y="25" width="12" height="12" rx="2.5"/>
+      <rect x="25" y="25" width="12" height="12" rx="2.5"/>
+      <rect x="9"  y="41" width="12" height="12" rx="2.5"/>
+      <rect x="25" y="41" width="12" height="12" rx="2.5"/>
+      <rect x="41" y="41" width="12" height="12" rx="2.5"/>
+    </g>
+    <rect x="41.75" y="25.75" width="10.5" height="10.5" rx="2" fill="none"
+          stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="1.5" stroke-dasharray="2.6 2.2"/>
+    <path d="M47 25.5 C47 20, 48.5 17, 50.5 15.8" fill="none" stroke="#FFFFFF"
+          stroke-width="2.2" stroke-linecap="round"/>
+    <rect x="44" y="5.5" width="13" height="13" rx="2.8" fill="#FFFFFF" transform="rotate(14 50.5 12)"/>
+  </g>
+  <text x="80" y="38" font-family="'Segoe UI Variable Display','Segoe UI',Inter,'Noto Sans',Arial,sans-serif"
+        font-size="31" font-weight="600" letter-spacing="-0.4" fill="#1D2A2E">Lifeline</text>
+  <text x="81" y="56" font-family="'Segoe UI Variable Text','Segoe UI',Inter,'Noto Sans',Arial,sans-serif"
+        font-size="12.5" fill="#5A686D">File recovery</text>
+</svg>
