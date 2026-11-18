@@ -119,11 +119,11 @@ h3 { font: 600 24px/1.25 var(--sans); color: var(--ink); letter-spacing: -.015em
 .window { overflow: hidden; }
 .window img { display: block; width: 100%; height: auto; }
 .collage .window { left: 0; top: 10%; width: 82%; }
-.chance { right: 0; top: 0; width: 44%; padding: 16px 18px 14px; background: #1f1d1a; }
+.chance { right: 0; top: 0; width: 46%; padding: 16px 18px 14px; overflow: hidden; background: #1f1d1a; }
 .chance ul { display: grid; gap: 7px; margin-top: 10px; }
-.chance li { display: flex; justify-content: space-between; gap: 10px; font: 12.5px var(--mono); color: var(--body); }
-.chance li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.chance b { font-weight: 500; white-space: nowrap; }
+.chance li { display: flex; align-items: baseline; gap: 10px; min-width: 0; font: 12px var(--mono); color: var(--body); }
+.chance li span { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chance b { flex: none; font-weight: 500; white-space: nowrap; }
 .chance b::before { content: "● "; }
 .chance .ok { color: var(--mint); } .chance .good { color: #a9c46a; } .chance .poor { color: var(--mustard); }
 .map { right: 2%; bottom: 4%; width: 40%; padding: 14px 14px 12px; }
