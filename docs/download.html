@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Download Lifeline</title>
+<meta name="description" content="Download Lifeline for Windows, Linux or macOS. One file, no installer: run it from a USB stick and get your deleted files back.">
+<meta name="theme-color" content="#121110">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..600&family=Schibsted+Grotesk:wght@400..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=5">
+<script>document.documentElement.classList.add("js"); if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("motion");</script>
+</head>
+<body class="dl">
+<a class="skip" href="#main">Skip to content</a>
+<div class="wash" aria-hidden="true"><i data-w="get" class="on"></i></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <a class="brand" href="index.html" aria-label="Lifeline, home">
+    <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+      <g class="blocks"><rect x="9" y="25" width="12" height="12" rx="2.5"/><rect x="25" y="25" width="12" height="12" rx="2.5"/><rect x="9" y="41" width="12" height="12" rx="2.5"/><rect x="25" y="41" width="12" height="12" rx="2.5"/><rect x="41" y="41" width="12" height="12" rx="2.5"/></g>
+      <rect class="slot" x="41.75" y="25.75" width="10.5" height="10.5" rx="2"/>
+      <path class="rope" d="M47 25.5 C47 20, 48.5 17, 50.5 15.8"/>
+      <rect class="lifted" x="44" y="5.5" width="13" height="13" rx="2.8"/>
+    </svg>
+    <span>Lifeline</span>
+  </a>
+  <nav class="links" aria-label="Main">
+    <a href="index.html#scans">Features</a><a href="download.html" aria-current="page">Download</a><a href="https://github.com/Ojas1024/LifeLine">GitHub</a>
+  </nav>
+</header>
+
+<main id="main">
+<section class="dl-hero" data-wash="get">
+  <p class="eyebrow reveal">Download · version <span class="ver">2.0.1</span> · free under the MIT license</p>
+  <h1 class="display reveal"><span class="grey">Get it</span> <em>running.</em></h1>
+  <p class="lede reveal">One file, no installer. Save it to a USB stick or another drive, <b>not the drive you lost files on</b>, and run it from there.</p>
+  <div class="cta reveal">
+    <a class="button large" id="primary" href="https://github.com/Ojas1024/LifeLine/releases/latest">Download Lifeline <svg viewBox="0 0 16 16"><path d="M8 3v10M3.5 8.5 8 13l4.5-4.5"/></svg></a>
+    <a class="button ghost large" href="#all">Other systems</a>
+  </div>
+  <p class="primary-note reveal" id="primary-note">Pick your system below.</p>
+  <svg class="pulse reveal" viewBox="0 0 600 60" aria-hidden="true" preserveAspectRatio="none"><path d="M0 34 H170 L186 34 L196 14 L210 54 L222 6 L236 46 L246 34 H600"/></svg>
+</section>
+
+<section class="chapter dl-list" id="all" data-wash="get">
+  <div class="dl-grid">
+
+    <article class="dl-card reveal" data-os="windows">
+      <div class="dl-head">
+        <svg class="os-glyph" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 7.5 14 6v9.5H4zM16 5.7 28 4v11.5H16zM4 17h10v9.5L4 25zM16 17h12v11l-12-1.7z"/></svg>
+        <div><h2>Windows</h2><p class="stack">Windows 10 and 11 · 64-bit</p></div>
+      </div>
+      <a class="button" href="https://github.com/Ojas1024/LifeLine/releases/latest/download/Lifeline-Windows.exe" data-asset="Lifeline-Windows.exe">Lifeline-Windows.exe <span class="size"></span></a>
+      <ol class="steps">
+        <li>Save the file to a USB stick or a different drive.</li>
+        <li>Double-click it. When Windows asks <i>"Do you want to allow this app to make changes?"</i>, choose <b>Yes</b>. Lifeline needs this to read drives directly, and it only ever reads.</li>
+        <li>If you see <i>"Windows protected your PC"</i>, click <b>More info → Run anyway</b>. This appears because the app isn't code-signed yet.</li>
+      </ol>
+      <p class="cli-note">Command line, from a terminal: <code>Lifeline-Windows.exe scan D: --out E:\Recovered</code></p>
+    </article>
+
+    <article class="dl-card reveal" data-os="linux">
+      <div class="dl-head">
+        <svg class="os-glyph" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4c-3 0-4.5 2.6-4.5 6 0 2.2-.7 3.6-2.2 5.6C7.6 18 6.5 20.3 7 23c-1.6.6-2 2-1 3.2 1.1 1.3 3.4 1.2 5 .3 1.4.9 3.2 1.5 5 1.5s3.6-.6 5-1.5c1.6.9 3.9 1 5-.3 1-1.2.6-2.6-1-3.2.5-2.7-.6-5-2.3-7.4-1.5-2-2.2-3.4-2.2-5.6 0-3.4-1.5-6-4.5-6z"/><circle cx="14" cy="10" r=".8"/><circle cx="18" cy="10" r=".8"/></svg>
+        <div><h2>Linux</h2><p class="stack">x86-64 · glibc 2.35+ (Ubuntu 22.04, Debian 12, Fedora 36 and newer)</p></div>
+      </div>
+      <a class="button" href="https://github.com/Ojas1024/LifeLine/releases/latest/download/Lifeline-Linux-x86_64" data-asset="Lifeline-Linux-x86_64">Lifeline-Linux-x86_64 <span class="size"></span></a>
+      <ol class="steps">
+        <li>Save the file to a USB stick or a different drive.</li>
+        <li>Make it runnable: right-click → <b>Properties → Allow executing as program</b>, or run <code>chmod +x Lifeline-Linux-x86_64</code>.</li>
+        <li>Double-click it and press <b>Restart with administrator rights</b> when asked, or start it with administrator rights yourself:
+          <div class="cmd"><code>sudo -E ./Lifeline-Linux-x86_64</code><button type="button" data-copy="sudo -E ./Lifeline-Linux-x86_64">Copy</button></div></li>
+      </ol>
+    </article>
+
+    <article class="dl-card reveal" data-os="mac">
+      <div class="dl-head">
+        <svg class="os-glyph" viewBox="0 0 32 32" aria-hidden="true"><path d="M21.5 16.8c0-2.9 2.4-4.3 2.5-4.4-1.4-2-3.5-2.3-4.2-2.3-1.8-.2-3.5 1-4.4 1-.9 0-2.3-1-3.8-1-1.9 0-3.7 1.1-4.7 2.9-2 3.5-.5 8.7 1.4 11.5 1 1.4 2.1 2.9 3.6 2.9 1.4-.1 2-.9 3.7-.9s2.2.9 3.7.9 2.5-1.4 3.4-2.8c1.1-1.6 1.5-3.1 1.5-3.2 0 0-2.7-1.1-2.7-4.6zM18.9 8.2c.8-1 1.3-2.3 1.2-3.6-1.1 0-2.5.8-3.3 1.7-.7.8-1.4 2.2-1.2 3.5 1.3.1 2.5-.6 3.3-1.6z"/></svg>
+        <div><h2>macOS</h2><p class="stack">Apple silicon (M1 and newer) · macOS 13+</p></div>
+      </div>
+      <a class="button" href="https://github.com/Ojas1024/LifeLine/releases/latest/download/Lifeline-macOS-arm64.zip" data-asset="Lifeline-macOS-arm64.zip">Lifeline-macOS-arm64.zip <span class="size"></span></a>
+      <ol class="steps">
+        <li>Unzip it and move <b>Lifeline.app</b> anywhere except the drive you lost files on.</li>
+        <li>The first time, <b>right-click → Open</b>, then <b>Open</b> again. macOS asks because the app isn't notarized yet.</li>
+        <li>Allow <b>Full Disk Access</b> in <i>System Settings → Privacy &amp; Security</i>, and enter your password when Lifeline asks for administrator rights.</li>
+      </ol>
+      <p class="cli-note">Intel Mac? Use <code>pip install lifeline-recovery</code> below.</p>
+    </article>
+
+    <article class="dl-card reveal" data-os="pip">
+      <div class="dl-head">
+        <svg class="os-glyph" viewBox="0 0 32 32" aria-hidden="true"><path d="M15.8 4c-5.7 0-5.4 2.5-5.4 2.5v2.6h5.5v.8H8.3S4.6 9.5 4.6 15.3s3.2 5.6 3.2 5.6h1.9v-2.7s-.1-3.2 3.2-3.2h5.4s3.1 0 3.1-3V7.1S21.9 4 15.8 4zm-3 1.7a1 1 0 1 1 0 2 1 1 0 0 1 0-2zM16.2 28c5.7 0 5.4-2.5 5.4-2.5v-2.6h-5.5v-.8h7.6s3.7.4 3.7-5.4-3.2-5.6-3.2-5.6h-1.9v2.7s.1 3.2-3.2 3.2h-5.4s-3.1 0-3.1 3v4.9S10.1 28 16.2 28zm3-1.7a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>
+        <div><h2>Any system, with Python</h2><p class="stack">Python 3.10+ · Windows, macOS (Intel too), Linux</p></div>
+      </div>
+      <div class="cmd"><code>pip install lifeline-recovery</code><button type="button" data-copy="pip install lifeline-recovery">Copy</button></div>
+      <ol class="steps">
+        <li>Then run <code>lifeline</code> to open the app, or <code>lifeline --help</code> for the command line.</li>
+        <li>Start it with administrator rights (an admin terminal on Windows, <code>sudo -E lifeline</code> on Linux/macOS), or let the app restart itself with them.</li>
+      </ol>
+      <p class="cli-note"><a class="link" href="https://pypi.org/project/lifeline-recovery/">lifeline-recovery on PyPI →</a></p>
+    </article>
+  </div>
+
+  <div class="dl-extra">
+    <div class="tile reveal">
+      <h3>Check your download</h3>
+      <p>Every release lists a SHA-256 checksum for each file in <a class="link" href="https://github.com/Ojas1024/LifeLine/releases/latest/download/SHA256SUMS.txt">SHA256SUMS.txt</a>. Compare it with what your system reports:</p>
+      <p class="stack">Windows: <code>certutil -hashfile Lifeline-Windows.exe SHA256</code><br>Linux: <code>sha256sum Lifeline-Linux-x86_64</code><br>macOS: <code>shasum -a 256 Lifeline-macOS-arm64.zip</code></p>
+    </div>
+    <div class="tile reveal">
+      <h3>Every build is made in the open</h3>
+      <p>The binaries are built by GitHub Actions from the public source on real Windows, Linux and macOS machines, after the test suite passes. You can read the <a class="link" href="https://github.com/Ojas1024/LifeLine/blob/main/.github/workflows/release.yml">build recipe</a>, see <a class="link" href="https://github.com/Ojas1024/LifeLine/releases">all releases</a>, or build it yourself with <code>build_exe.bat</code> / <code>./build.sh</code>.</p>
+    </div>
+    <div class="tile reveal">
+      <h3>Free, for everyone</h3>
+      <p>Lifeline is released under the <a class="link" href="https://github.com/Ojas1024/LifeLine/blob/main/LICENSE">MIT license</a>. Use it at home or at work, change it, share it, or build on it. Just keep the copyright notice.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <span>Lifeline · made by <a href="https://ojas1024.github.io/">Ojas Gupta</a> · MIT license</span>
+  <nav><a href="index.html">Home</a><a href="https://github.com/Ojas1024/LifeLine">GitHub</a><a href="https://github.com/Ojas1024/LifeLine/releases">All releases</a><a href="https://pypi.org/project/lifeline-recovery/">PyPI</a></nav>
+</footer>
+<script src="main.js?v=4"></script>
+<script src="download.js?v=4"></script>
+</body>
+</html>

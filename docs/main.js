@@ -30,7 +30,7 @@
   document.querySelectorAll(".reveal, .collage").forEach((el) => (motion ? rev.observe(el) : el.classList.add("in")));
 
   // nav progress: how far through each chapter we are
-  const bars = [...document.querySelectorAll(".progress a")].map((a) => [a, document.getElementById(a.dataset.s)]);
+  const bars = [...document.querySelectorAll(".progress a")].map((a) => [a, document.getElementById(a.dataset.s)]).filter(([, s]) => s);
   let ticking = false;
   function progress() {
     ticking = false;
@@ -101,8 +101,8 @@
 
   // parallax on the hero collage
   const collage = document.querySelector(".collage");
-  const cards = [...collage.querySelectorAll("[data-depth]")];
-  collage.closest(".hero").addEventListener("pointermove", (e) => {
+  const cards = collage ? [...collage.querySelectorAll("[data-depth]")] : [];
+  if (collage) collage.closest(".hero").addEventListener("pointermove", (e) => {
     const r = collage.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
     cards.forEach((c) => { const d = +c.dataset.depth; c.style.transform = `translate(${(-x * d).toFixed(1)}px, ${(-y * d).toFixed(1)}px)`; });

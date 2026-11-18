@@ -1,14 +1,16 @@
 [build-system]
-requires = ["setuptools>=64"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "lifeline-recovery"
-version = "2.0.0"
+version = "2.0.1"
 description = "Get deleted files back: a guided recovery app and CLI for Windows, macOS and Linux (NTFS, FAT, exFAT, 20 carved formats, lost partitions)"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{ name = "Ojas Gupta" }]
+license = "MIT"
+license-files = ["LICENSE"]
 dependencies = ["PyQt6>=6.5"]
 keywords = ["data recovery", "file recovery", "undelete", "ntfs", "fat32", "exfat", "file carving",
             "forensics", "partition recovery", "photo recovery"]
@@ -30,6 +32,7 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://ojas1024.github.io/LifeLine/"
+Download = "https://ojas1024.github.io/LifeLine/download.html"
 Source = "https://github.com/Ojas1024/LifeLine"
 Issues = "https://github.com/Ojas1024/LifeLine/issues"
 

@@ -1,0 +1,103 @@
+# Builds ready-to-run Lifeline binaries on real Windows, Linux and macOS machines and
+# attaches them to a GitHub Release. Runs when a version tag (v2.0.1, ...) is pushed.
+# The file names never change, so ".../releases/latest/download/<name>" always works.
+name: Build and release binaries
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Tools for the file-system test images
+        run: sudo apt-get update && sudo apt-get install -y dosfstools mtools ntfs-3g libegl1 libxkbcommon0
+      - run: pip install -r requirements.txt pytest
+      - run: QT_QPA_PLATFORM=offscreen python -m pytest -q
+
+  build:
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            asset: Lifeline-Windows.exe
+          - os: ubuntu-22.04          # older glibc, so the binary runs on more distributions
+            asset: Lifeline-Linux-x86_64
+          - os: macos-14              # Apple silicon
+            asset: Lifeline-macOS-arm64.zip
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt pyinstaller
+
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
+        run: >
+          pyinstaller --noconfirm --onefile --windowed --uac-admin --name Lifeline
+          --icon lifeline/assets/icon.ico --add-data "lifeline/assets;lifeline/assets"
+          --collect-submodules lifeline launcher.py
+          && move dist\Lifeline.exe dist\${{ matrix.asset }}
+        shell: cmd
+
+      - name: Build (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          pyinstaller --noconfirm --onefile --windowed --name Lifeline \
+            --add-data "lifeline/assets:lifeline/assets" --collect-submodules lifeline launcher.py
+          mv dist/Lifeline dist/${{ matrix.asset }}
+          chmod +x dist/${{ matrix.asset }}
+          ./dist/${{ matrix.asset }} --version
+
+      - name: Build (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          pyinstaller --noconfirm --windowed --name Lifeline --icon lifeline/assets/icon.ico \
+            --osx-bundle-identifier io.github.ojas1024.lifeline \
+            --add-data "lifeline/assets:lifeline/assets" --collect-submodules lifeline launcher.py
+          ditto -c -k --keepParent dist/Lifeline.app dist/${{ matrix.asset }}
+
+      - name: Smoke test (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath dist\${{ matrix.asset }} -ArgumentList '--version' -Wait -PassThru -NoNewWindow
+          if ($p.ExitCode -ne 0) { exit 1 }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset }}
+          path: dist/${{ matrix.asset }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: assets
+          merge-multiple: true
+      - name: Checksums
+        run: cd assets && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          if [ "${GITHUB_REF_TYPE}" != "tag" ]; then echo "Run from a tag to publish"; exit 0; fi
+          NOTES="Download the file for your system below, or see https://ojas1024.github.io/LifeLine/download.html for step-by-step instructions. Also on PyPI: pip install lifeline-recovery"
+          gh release create "$TAG" assets/* --repo "$GITHUB_REPOSITORY" --title "Lifeline ${TAG#v}" --notes "$NOTES" --latest \
+            || gh release upload "$TAG" assets/* --repo "$GITHUB_REPOSITORY" --clobber

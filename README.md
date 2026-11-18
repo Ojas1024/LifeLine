@@ -7,13 +7,15 @@
 **Deleted isn't gone.** Get back deleted photos, documents and whole folders from drives, USB sticks and memory cards.<br>
 A guided desktop app and a command-line tool for Windows, macOS and Linux.
 
-[**Website**](https://ojas1024.github.io/LifeLine/) · [Get started](#get-started) · [Features](#what-it-does) · [Command line](#command-line) · [How it works](#how-it-works)
+[**Website**](https://ojas1024.github.io/LifeLine/) · [**Download**](https://ojas1024.github.io/LifeLine/download.html) · [Get started](#get-started) · [Features](#what-it-does) · [Command line](#command-line) · [How it works](#how-it-works)
 
 ![Windows](https://img.shields.io/badge/Windows-0b0b0b?style=flat-square&logo=windows&logoColor=white)
 ![macOS](https://img.shields.io/badge/macOS-0b0b0b?style=flat-square&logo=apple&logoColor=white)
 ![Linux](https://img.shields.io/badge/Linux-0b0b0b?style=flat-square&logo=linux&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-0b0b0b?style=flat-square&logo=python&logoColor=white)
 ![PyQt6](https://img.shields.io/badge/GUI-PyQt6-0b0b0b?style=flat-square&logo=qt&logoColor=white)
+[![PyPI](https://img.shields.io/pypi/v/lifeline-recovery?style=flat-square&color=0b0b0b&label=PyPI)](https://pypi.org/project/lifeline-recovery/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-0b0b0b?style=flat-square)](https://github.com/Ojas1024/LifeLine/blob/main/LICENSE)
 
 <img src="https://raw.githubusercontent.com/Ojas1024/LifeLine/main/docs/assets/screens/dark-gallery.png" width="860" alt="Lifeline showing recovered holiday photos in a gallery">
 
@@ -35,6 +37,19 @@ the right scan for you.
 | ♻ **Check the Recycle Bin first** | Lists what's still in the Recycle Bin / Trash on every OS, with original locations. |
 
 It only ever **reads** from the drive it scans, and it refuses to save recovered files onto that same drive.
+
+## Download
+
+No Python needed. Download one file, save it to a USB stick or another drive, and run it:
+
+| System | File | How to run |
+|---|---|---|
+| **Windows** 10/11 | [Lifeline-Windows.exe](https://github.com/Ojas1024/LifeLine/releases/latest/download/Lifeline-Windows.exe) | Double-click and choose **Yes** for administrator access. If SmartScreen appears: **More info → Run anyway** |
+| **Linux** x86-64 | [Lifeline-Linux-x86_64](https://github.com/Ojas1024/LifeLine/releases/latest/download/Lifeline-Linux-x86_64) | `chmod +x Lifeline-Linux-x86_64`, then double-click or `sudo -E ./Lifeline-Linux-x86_64` |
+| **macOS** Apple silicon | [Lifeline-macOS-arm64.zip](https://github.com/Ojas1024/LifeLine/releases/latest/download/Lifeline-macOS-arm64.zip) | Unzip, then **right-click → Open** the first time |
+| **Any**, with Python 3.10+ | `pip install lifeline-recovery` | `lifeline` |
+
+Step-by-step help and checksums are on the [download page](https://ojas1024.github.io/LifeLine/download.html). Every binary is built from this repository by [GitHub Actions](https://github.com/Ojas1024/LifeLine/blob/main/.github/workflows/release.yml) after the tests pass.
 
 ## Get started
 
@@ -174,6 +189,10 @@ those systems' own APIs. The scan engines are the same Python code on all three.
 - Deep scan assumes each file is stored in one piece, so fragmented files come back damaged and without names. Quick scan doesn't have this problem.
 - A deleted FAT file that only had a short 8.3 name loses its first letter (shown as `_`), because that letter isn't stored anywhere.
 - Quick scan supports NTFS, FAT and exFAT. ext4, APFS, HFS+ and Btrfs get deep scan only.
+
+## License
+
+[MIT](https://github.com/Ojas1024/LifeLine/blob/main/LICENSE): free for everyone to use, change and share, at home or at work. Just keep the copyright notice.
 
 ---
 

@@ -25,7 +25,7 @@ a { color: inherit; text-decoration: none; }
 h1, h2, h3, p, ul, figure, pre { margin: 0; padding: 0; }
 ul { list-style: none; }
 b { color: var(--ink); font-weight: 600; }
-code { font: 13.5px var(--mono); color: var(--ink); background: var(--lift2); padding: 1px 6px; border-radius: 5px; box-shadow: inset 0 0 0 1px var(--rule); }
+code { font: 13.5px var(--mono); color: var(--ink); background: var(--lift2); padding: 1px 6px; border-radius: 5px; border: 1px solid var(--rule); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 ::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
 .skip { position: fixed; top: -80px; left: 20px; z-index: 50; background: var(--lift); color: var(--ink); padding: 10px 14px; border-radius: 8px; }
@@ -200,7 +200,7 @@ h3 { font: 600 24px/1.25 var(--sans); color: var(--ink); letter-spacing: -.015em
 .tile:hover .glyph { animation: nudge .7s var(--spring); }
 @keyframes nudge { 40% { translate: 0 -4px; rotate: -6deg; } }
 .os .cmd { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 4px; padding: 10px 12px; border-radius: 10px; background: #0d0c0b; box-shadow: inset 0 0 0 1px var(--rule); }
-.os .cmd code { background: none; box-shadow: none; padding: 0; overflow-x: auto; white-space: nowrap; }
+.os .cmd code { background: none; border: 0; padding: 0; overflow-x: auto; white-space: nowrap; }
 button[data-copy] { font: 600 12px var(--sans); color: var(--ink); background: var(--lift2); border: 0; border-radius: 999px; padding: 6px 12px; cursor: pointer; box-shadow: inset 0 0 0 1px var(--rule); transition: background .2s, color .2s; flex: none; }
 button[data-copy]:hover { background: var(--accent); color: #15170c; }
 button[data-copy].done { background: var(--mint); color: #0c1a12; }
@@ -239,3 +239,33 @@ button[data-copy].done { background: var(--mint); color: #0c1a12; }
   .facts { grid-template-columns: 1fr; }
   .list li { grid-template-columns: 1fr; gap: 2px; }
 }
+
+/* ── download page ── */
+.links a[aria-current="page"] { color: var(--ink); }
+.dl-hero { display: grid; gap: 24px; padding: clamp(48px, 8vw, 110px) var(--gutter) 30px; max-width: 1200px; }
+.primary-note { font: 13px var(--mono); color: var(--muted); }
+.dl-list { padding-top: 40px; }
+.dl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: 20px; margin-bottom: 40px; }
+.dl-card { display: grid; gap: 18px; align-content: start; padding: 28px 26px; border-radius: 18px; background: color-mix(in srgb, var(--lift) 86%, transparent);
+  box-shadow: inset 0 0 0 1px var(--rule); transition: box-shadow .4s, translate .5s var(--spring); }
+.dl-card:hover { translate: 0 -4px; box-shadow: var(--shadow-lift); }
+.dl-card.yours { box-shadow: inset 0 0 0 1.5px var(--accent), 0 0 40px color-mix(in srgb, var(--accent) 10%, transparent); }
+.dl-card.yours::before { content: "Your system"; justify-self: start; font: 600 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; color: #15170c; background: var(--accent); padding: 3px 10px; border-radius: 999px; }
+.dl-head { display: flex; align-items: center; gap: 16px; }
+.dl-head h2 { font: 600 24px/1.2 var(--sans); color: var(--ink); letter-spacing: -.015em; }
+.os-glyph { width: 40px; height: 40px; flex: none; fill: var(--ink); opacity: .9; }
+.os-glyph circle { fill: var(--paper); }
+.dl-card .button { justify-self: start; max-width: 100%; overflow-wrap: anywhere; }
+.dl-card .button .size { font-weight: 500; opacity: .75; }
+.steps { display: grid; gap: 10px; padding-left: 22px; list-style: decimal; color: var(--body); font-size: 15.5px; }
+.steps li::marker { color: var(--accent); font: 600 14px var(--mono); }
+.steps i { color: var(--ink); font-style: italic; }
+.dl-card .cmd, .steps .cmd { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 8px; padding: 10px 12px; border-radius: 10px; background: #0d0c0b; box-shadow: inset 0 0 0 1px var(--rule); }
+.dl-card .cmd code, .os .cmd code { min-width: 0; }
+.dl-card .cmd code { background: none; border: 0; padding: 0; overflow-x: auto; white-space: nowrap; }
+.cli-note { font-size: 14px; color: var(--muted); }
+.cli-note code { overflow-wrap: anywhere; }
+.dl-extra { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 60px; }
+.dl-extra .stack { line-height: 2; }
+.dl-extra .stack code { font-size: 12px; overflow-wrap: anywhere; }
+@media (max-width: 600px) { .dl-grid { grid-template-columns: 1fr; } }

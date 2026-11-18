@@ -1,10 +1,9 @@
-# Publishes lifeline-recovery to PyPI when a GitHub release is published.
-# Uses PyPI "trusted publishing": no API token is stored anywhere.
+# Publishes lifeline-recovery to PyPI using PyPI "trusted publishing" (no token stored).
+# Run it by hand from the Actions tab once the trusted publisher is set up on pypi.org
+# (project lifeline-recovery, owner Ojas1024, repo LifeLine, workflow publish.yml, environment pypi).
 name: Publish to PyPI
 
 on:
-  release:
-    types: [published]
   workflow_dispatch:
 
 jobs:
